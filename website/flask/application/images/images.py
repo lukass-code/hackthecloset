@@ -39,3 +39,12 @@ def get_images():
         list_images.append([images_row, extract_features_url(images_row[0])])
     #print(list_images)
     return jsonify(list_images), 201,
+
+@images_bp.route("/get_image",methods=['GET'])
+def get_image():
+    basedir = join(dirname(realpath(__file__)))
+    csv_path = basedir + "/raw_data.csv"
+    df = pd.read_csv(csv_path)
+    random_index = int(random.random()*len(df))
+    images_row = df.loc[random_index].dropna().to_list()
+    return jsonify([images_row, extract_features_url(images_row[0])]), 201,
