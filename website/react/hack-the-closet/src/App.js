@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import './imageCard'
+import ResetButton from './ResetButton';
 import ImageCard from './imageCard';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
 
+//Updates the score for each image
 function updateScores(clickedIndex, currentImagesScore, currentImages) {
   var featuresClicked = currentImages[clickedIndex][1]
   for (let i = 0; i < currentImages.length; i++) {
@@ -18,6 +21,7 @@ function updateScores(clickedIndex, currentImagesScore, currentImages) {
   return currentImagesScore;
 }
 
+//Checks is the image score is too low (<0)
 function checkReplace(currentImagesScore) {
   const replace_list = [];
   for (let i = 0; i < currentImagesScore.length; i++) {
@@ -30,6 +34,7 @@ function checkReplace(currentImagesScore) {
   return replace_list
 }
 
+//Updates image data in list
 const handlereplaceImages = (currentImages, image_data, index, setCurrentImages) => {
   //console.log(currentImages)
   setCurrentImages(currentImages => {
@@ -39,15 +44,20 @@ const handlereplaceImages = (currentImages, image_data, index, setCurrentImages)
   });
 };
 
-
+//Replaces the image in the image list (fetches new image data)
 function replaceImages(replacelist, currentImages, setCurrentImages) {
   for (let i = 0; i < replacelist.length; i++) {
     fetch('/get_image').then(res => res.json()).then(data => {
       handlereplaceImages(currentImages, data, replacelist[i], setCurrentImages);
     });
     console.log(i)
-    
+
   }
+}
+
+function sendNewChoiceData(imageData) {
+  let json = JSON.stringify(imageData)
+  fetch('/set_choice?choice=' + json)
 }
 
 function App() {
@@ -61,29 +71,37 @@ function App() {
   }, []);
 
   const handleImageClick = (e) => {
+    sendNewChoiceData(currentImages[e.target.name][1]) //it is the clicked index
     currentImagesScore = updateScores(e.target.name, currentImagesScore, currentImages);
     //console.log(currentImagesScore);
-    replaceImages(checkReplace(currentImagesScore),currentImages, setCurrentImages);
-    
+    replaceImages(checkReplace(currentImagesScore), currentImages, setCurrentImages);
+
 
 
   };
 
+  const handleResetClick = (e) => {
+    replaceImages([...Array(10).keys()], currentImages, setCurrentImages);
+  }
+
   if (currentImages != 0) {
     return (
-      <div class="center">
-        <Container fluid>
-          <Row className='mb-2'>
-            {currentImages.slice(0, 5).map((currentImage, index) => (
-              <Col className='px-1'> <ImageCard key={Date.now()} handleImageClick={handleImageClick} index={index} imageUrl={currentImage[0][0]} /> </Col>
-            ))}
-          </Row>
-          <Row>
-            {currentImages.slice(5, 10).map((currentImage, index) => (
-              <Col className='px-1'> <ImageCard key={Date.now()} handleImageClick={handleImageClick} index={index + 5} imageUrl={currentImage[0][0]} /> </Col>
-            ))}
-          </Row>
-        </Container>
+      <div>
+          <ResetButton handleResetClick={handleResetClick} />
+          <div class="center">
+            <Container fluid>
+              <Row className='mb-2'>
+                {currentImages.slice(0, 5).map((currentImage, index) => (
+                  <Col className='px-1'> <ImageCard key={Date.now()} handleImageClick={handleImageClick} index={index} imageUrl={currentImage[0][0]} /> </Col>
+                ))}
+              </Row>
+              <Row>
+                {currentImages.slice(5, 10).map((currentImage, index) => (
+                  <Col className='px-1'> <ImageCard key={Date.now()} handleImageClick={handleImageClick} index={index + 5} imageUrl={currentImage[0][0]} /> </Col>
+                ))}
+              </Row>
+            </Container>
+          </div>
       </div>
     );
   } else {

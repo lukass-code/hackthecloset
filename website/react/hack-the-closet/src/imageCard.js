@@ -6,10 +6,10 @@ import Image from 'react-bootstrap/Image';
 
 function ImageCard(props) {
     return (
-      <Card className="imageCard" style={{ cursor: "pointer" }}>
+      <Card className="imageCard">
         <Card.Body>
           <Card.Text>
-          <Image name={props.index} onClick={props.handleImageClick} src={props.imageUrl} fluid/>
+          <Image name={props.index} onClick={props.handleImageClick} src={props.imageUrl} style={{ cursor: "pointer" }} fluid/>
           </Card.Text>
         </Card.Body>
       </Card>
