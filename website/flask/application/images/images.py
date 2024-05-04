@@ -5,6 +5,7 @@ import pandas as pd
 import json
 import os
 from os.path import join, dirname, realpath
+from . import select_images as si
 
 images_bp = Blueprint(
     'images_bp', __name__
@@ -43,11 +44,7 @@ def get_images():
 
 @images_bp.route("/get_image",methods=['GET'])
 def get_image():
-    basedir = join(dirname(realpath(__file__)))
-    csv_path = basedir + "/raw_data.csv"
-    df = pd.read_csv(csv_path)
-    random_index = int(random.random()*len(df))
-    images_row = df.loc[random_index].dropna().to_list()
+    images_row = si.select_image()
     return jsonify([images_row, extract_features_url(images_row[0])]), 201,
 
 @images_bp.route("/set_choice",methods=['GET'])
