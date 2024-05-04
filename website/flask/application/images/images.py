@@ -9,6 +9,22 @@ images_bp = Blueprint(
     'images_bp', __name__
 )
 
+def extract_features_url(url):
+    url_cutted = url.split("/")
+    print(url_cutted)
+    if (url_cutted[7]=="S" or url_cutted[7]=="V"):
+        season = "S"
+    else:
+        season = "W"
+    feature_dict = {
+        "section": url_cutted[9],
+        "product_type": url_cutted[8],
+        "season": season,#attention original 4
+        "year": url_cutted[6],
+        "enc_feature": 0000
+    }
+    return feature_dict
+
 @images_bp.route("/get_images",methods=['GET'])
 def get_images():
     number = int(request.args.get("number"))
@@ -18,6 +34,8 @@ def get_images():
     df = pd.read_csv(csv_path)
     for i in range(0, number):
         random_index = int(random.random()*len(df))
-        list_images.append(df.loc[random_index].dropna().to_list())
-    print(list_images)
+        images_row = df.loc[random_index].dropna().to_list()
+        
+        list_images.append([images_row, extract_features_url(images_row[0])])
+    #print(list_images)
     return jsonify(list_images), 201,
