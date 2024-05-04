@@ -1,2 +1,2 @@
-# Hack_your_closet
+# Hackthecloset
 Project at the HackUPC 2024
