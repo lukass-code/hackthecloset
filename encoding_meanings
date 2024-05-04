@@ -1,0 +1,9 @@
+{year: 2018,2019,2020,2021,2022,2023,2024}
+
+{season: "V", "I", "W", "S"}
+
+## 0 = clothes, 1 = shoes, 2 = beauty products, 4 = zara home
+{product_type: 0,1,2,4}
+
+## 1 = women, 2 = men, 3 = kids
+{section = 0,1,2}
