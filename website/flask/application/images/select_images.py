@@ -55,7 +55,7 @@ def update_rank(json_choices):
         if feature_dict["year"] == json_choices["year"]:
             item[1] = item[1] + 2
         else:
-            item[1] = item[1] -2
+            item[1] = item[1] - 2
         if feature_dict["product_type"] == json_choices["product_type"]:
             item[1] = item[1] + 20
         else:
