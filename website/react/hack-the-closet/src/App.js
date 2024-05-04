@@ -6,7 +6,6 @@ import ImageCard from './imageCard';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Alert from 'react-bootstrap/Alert';
 
 //Updates the score for each image
 function updateScores(clickedIndex, currentImagesScore, currentImages) {
@@ -30,7 +29,16 @@ function checkReplace(currentImagesScore) {
       currentImagesScore[i] = 0;
     }
   }
-  console.log(currentImagesScore)
+  const lowest = Math.min.apply(Math, currentImagesScore);
+  console.log(lowest)
+  const minIndex = currentImagesScore.indexOf(lowest);
+  if (!replace_list.includes(minIndex)) {
+    replace_list.push(minIndex);
+    currentImagesScore[minIndex] = 0;
+  }else{
+    console.log("tes")
+  }
+  console.log(replace_list)
   return replace_list
 }
 
@@ -87,21 +95,21 @@ function App() {
   if (currentImages != 0) {
     return (
       <div>
-          <ResetButton handleResetClick={handleResetClick} />
-          <div class="center">
-            <Container fluid>
-              <Row className='mb-2'>
-                {currentImages.slice(0, 5).map((currentImage, index) => (
-                  <Col className='px-1'> <ImageCard key={Date.now()} handleImageClick={handleImageClick} index={index} imageUrl={currentImage[0][0]} /> </Col>
-                ))}
-              </Row>
-              <Row>
-                {currentImages.slice(5, 10).map((currentImage, index) => (
-                  <Col className='px-1'> <ImageCard key={Date.now()} handleImageClick={handleImageClick} index={index + 5} imageUrl={currentImage[0][0]} /> </Col>
-                ))}
-              </Row>
-            </Container>
-          </div>
+        <ResetButton handleResetClick={handleResetClick} />
+        <div class="center">
+          <Container fluid>
+            <Row className='mb-2'>
+              {currentImages.slice(0, 5).map((currentImage, index) => (
+                <Col className='px-1'> <ImageCard key={Date.now()} handleImageClick={handleImageClick} index={index} imageUrl={currentImage[0][0]} /> </Col>
+              ))}
+            </Row>
+            <Row>
+              {currentImages.slice(5, 10).map((currentImage, index) => (
+                <Col className='px-1'> <ImageCard key={Date.now()} handleImageClick={handleImageClick} index={index + 5} imageUrl={currentImage[0][0]} /> </Col>
+              ))}
+            </Row>
+          </Container>
+        </div>
       </div>
     );
   } else {
