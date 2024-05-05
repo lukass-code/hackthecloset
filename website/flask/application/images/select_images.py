@@ -7,7 +7,7 @@ from os.path import join, dirname, realpath
 import json
 import math
 
-#add color, change dataset, 
+#add color, change dataset, add featurerank
 
 basedir = join(dirname(realpath(__file__)))
 #csv_path = basedir + "/holy_grail_pro2.csv" #"/images_men.csv"
@@ -40,7 +40,7 @@ def extract_features_url(url, index):
         "season": season,#attention original 4
         "year": url_cutted[6],
         "enc_feature": 0000,
-        "color": 0 #color[index]
+        "color": color[index] #0
     }
     return feature_dict
 
@@ -66,7 +66,7 @@ def update_rank(json_choices):
     #feature_vectors = df_sim.loc[json_choices["index"]]
     for item in rank_list:
         images_row = df.loc[item[0]].dropna().to_list()
-        #feature_dict = extract_features_url(images_row[0], item[0])
+        feature_dict = extract_features_url(images_row[0], item[0])
         ##feature_vektor
         #distance = feature_vectors[item[0]]
         #print((1-distance)*50)

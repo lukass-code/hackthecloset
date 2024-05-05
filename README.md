@@ -1,11 +1,8 @@
 # Hackthecloset
 Project at the HackUPC 2024
 
+A online shopping recomendation system
 
-## Ranking
+![alt text](img_show.png)
 
-- two ranking systems
-
-- replace image:
-    always one
-    is score is under 0
+Click on the clothes you like and the system will find others that you will like too.
