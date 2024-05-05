@@ -11,10 +11,28 @@ import Col from 'react-bootstrap/Col';
 function updateScores(clickedIndex, currentImagesScore, currentImages) {
   var featuresClicked = currentImages[clickedIndex][1]
   for (let i = 0; i < currentImages.length; i++) {
+    currentImagesScore[i] = currentImagesScore[i] - 8;
     if (currentImages[i][1]["product_type"] == featuresClicked["product_type"]) {
       currentImagesScore[i] = currentImagesScore[i] + 5;
     } else {
       currentImagesScore[i] = currentImagesScore[i] - 5;
+    }
+    if (currentImages[i][1]["section"] == featuresClicked["section"]) {
+      currentImagesScore[i] = currentImagesScore[i] + 0;
+    } else {
+      currentImagesScore[i] = currentImagesScore[i] - 10;
+    }
+    if (currentImages[i][1]["season"] == featuresClicked["season"]) {
+      currentImagesScore[i] = currentImagesScore[i] + 6;
+    } else {
+      currentImagesScore[i] = currentImagesScore[i] - 6;
+    }
+    if (currentImages[i][1]["color"].length > 1 && featuresClicked["color"].length > 1) {
+      let color1 = currentImages[i][1]["color"][1]
+      let color2 = featuresClicked["color"][1]
+      let colorDiff = Math.sqrt((color1[0] - color2[0]) ** 2 + (color1[1] - color2[1]) ** 2 + (color1[2] - color2[2]) ** 2);
+      console.log((colorDiff - 200) / 442 * 20)
+      currentImagesScore[i] = currentImagesScore[i] + (221 - colorDiff) / 442 * 50;
     }
   }
   return currentImagesScore;
@@ -26,7 +44,7 @@ function checkReplace(currentImagesScore) {
   for (let i = 0; i < currentImagesScore.length; i++) {
     if (currentImagesScore[i] < 0) {
       replace_list.push(i)
-      currentImagesScore[i] = 0;
+      currentImagesScore[i] = 15;
     }
   }
   const lowest = Math.min.apply(Math, currentImagesScore);
@@ -34,11 +52,13 @@ function checkReplace(currentImagesScore) {
   const minIndex = currentImagesScore.indexOf(lowest);
   if (!replace_list.includes(minIndex)) {
     replace_list.push(minIndex);
-    currentImagesScore[minIndex] = 0;
-  }else{
+    console.log("minIndex")
+    console.log(replace_list)
+    currentImagesScore[minIndex] = 15;
+  } else {
     console.log("tes")
   }
-  console.log(replace_list)
+  console.log(currentImagesScore)
   return replace_list
 }
 
@@ -70,7 +90,7 @@ function sendNewChoiceData(imageData) {
 
 function App() {
   const [currentImages, setCurrentImages] = useState(0);
-  var currentImagesScore = new Array(10).fill(0)
+  var currentImagesScore = new Float32Array(10).fill(0)
 
   useEffect(() => {
     fetch('/get_images?number=10').then(res => res.json()).then(data => {
@@ -81,7 +101,7 @@ function App() {
   const handleImageClick = (e) => {
     sendNewChoiceData(currentImages[e.target.name][1]) //it is the clicked index
     currentImagesScore = updateScores(e.target.name, currentImagesScore, currentImages);
-    //console.log(currentImagesScore);
+    console.log(currentImagesScore);
     replaceImages(checkReplace(currentImagesScore), currentImages, setCurrentImages);
 
 

@@ -22,7 +22,7 @@ def get_images():
         random_index = int(random.random()*len(si.df))
         images_row = si.df.loc[random_index].dropna().to_list()
         
-        list_images.append([images_row, si.extract_features_url(images_row[0])])
+        list_images.append([images_row, si.extract_features_url(images_row[0], random_index)])
     #print(list_images)
     return jsonify(list_images), 201,
 
@@ -30,8 +30,8 @@ def get_images():
 def get_image():
     #with open("rank.json", "r") as infile:
     #    rank_list = json.load(infile)
-    images_row = si.select_image()
-    return jsonify([images_row, si.extract_features_url(images_row[0])]), 201,
+    images_row, index = si.select_image()
+    return jsonify([images_row, si.extract_features_url(images_row[0], index)]), 201,
 
 @images_bp.route("/set_choice",methods=['GET'])
 def set_choice_data():
