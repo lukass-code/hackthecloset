@@ -1,7 +1,7 @@
 # Hackthecloset
 Project at the HackUPC 2024
 
-A online shopping recomendation system
+An online shopping recomendation system
 
 ![alt text](img_show.png)
 
