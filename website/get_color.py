@@ -9,7 +9,7 @@ mypath = "./website/data/"
 csv_path = "./website/images_men.csv"
 df = pd.read_csv(csv_path)
 color_list = []
-for ind in range(9001, 9838):#df.index:
+for ind in df.index:
     print(ind)
     #print(df.loc[ind])
     row = df.loc[ind].dropna()
